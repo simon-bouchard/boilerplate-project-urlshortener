@@ -17,13 +17,6 @@ const urlSchema = new mongoose.Schema({
 
 let urls = mongoose.model('urls', urlSchema);
 
-const CreateURL = (url, done) => {
-	urls.create(url, (err, saved_url) => {
-		if (err) return console.error(err);
-		done(null);
-	});
-};
-
 // handle POST body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));	
@@ -71,6 +64,17 @@ app.post('/api/shorturl', async (req, res) => {
 	        res.status(500).json({ error: 'Database error' }); // Handle database errors
 	   }
 	});
+});
+
+app.get('/api/shorturl/:shorturl', async (req, res) => {
+	const shorturl = req.params.shorturl;
+
+	let url = await urls.findOne({short_url: shorturl})
+		if (!url) {
+			return res.json({error: "Invalid shorturl"});
+		}
+		res.redirect(url.original_url)
+	
 });
 
 app.listen(port, function() {
