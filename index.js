@@ -60,7 +60,7 @@ app.post('/api/shorturl', async (req, res) => {
 			return res.json({error: "Invalid URL"});
 		}
 		try {
-		let url = await urls.findOne({ url: originalurl });
+		let url = await urls.findOne({ original_url: originalurl });
 			if (!url) {
 				const count = await urls.countDocuments();
 				url = await urls.create({original_url: originalurl, short_url: count});
